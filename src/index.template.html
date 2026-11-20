@@ -29,13 +29,22 @@
       <button class="btn" id="bHow">КАК ИГРАТЬ</button>
       <button class="btn" id="bCred">ЗВУКИ И АВТОРЫ</button>
     </div>
+    <button class="btn small" id="bName">👤 сменить имя</button>
     <button class="btn small" id="bReset">сбросить прогресс</button>
+  </div></div>
+
+  <div class="ov" id="ovName"><div class="card">
+    <h2>КАК ТЕБЯ ЗОВУТ?</h2>
+    <p>Это имя будет у героя. До свадьбы неделя, а внутри — шаурма дяди Толи.</p>
+    <input id="nameIn" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Гена">
+    <div><button class="btn pink" id="bNameOk">ГОТОВО</button></div>
   </div></div>
 
   <div class="ov" id="ovLevels"><div class="card" style="max-width:1020px">
     <h2>ВЫБЕРИ МЕСТО ПОЗОРА</h2>
     <div class="grid" id="lvGrid"></div>
     <div class="endless" id="bEndless"></div>
+    <button class="btn" id="bStory">📖 ИСТОРИЯ</button>
     <button class="btn" id="bLvBack">← НАЗАД</button>
   </div></div>
 
@@ -68,6 +77,7 @@
     <div class="tips" id="inTips"></div>
     <div class="goals" id="inGoals"></div>
     <button class="btn pink" id="bStart">НАЧАТЬ (Enter)</button>
+    <button class="btn" id="bInScene">▶ СЦЕНА</button>
     <button class="btn" id="bInBack">← К УРОВНЯМ</button>
   </div></div>
 
@@ -81,6 +91,7 @@
 
   <div class="ov" id="ovResult"><div class="card">
     <h2 id="rsTitle"></h2>
+    <div class="paper" id="rsPaper"><div class="mast">ВЕЧЕРНИЙ ВЫХЛОП</div><div class="date">суббота · экстренный выпуск · цена 5 ₽</div><div class="head" id="rsHead"></div></div>
     <div class="stars" id="rsStars"></div>
     <p class="dark" id="rsText"></p>
     <div class="goals" id="rsGoals"></div>

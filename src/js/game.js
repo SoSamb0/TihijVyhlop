@@ -14,7 +14,7 @@ function startLevel(i) {
     rumble: { next: rnd(4, 6), on: false, t: 0, amt: 0 }, heardT: 0, tut: i === 0 ? 0 : 9,
     trump: { ready: true, cd: 0 }, forecast: [],
     motes: Array.from({ length: 26 }, () => ({ x: rnd(140, 1250), y: rnd(120, 560), s: rnd(.5, 1.3) })),
-    stats: { farts: 0, heard: 0, framed: 0, framedBy: {}, blamed: 0, big: 0, vented: 0, burned: 0, maxSus: 0, trumpUsed: false },
+    stats: { farts: 0, heard: 0, framed: 0, framedBy: {}, blamed: 0, cleanPowers: [], vented: 0, burned: 0, maxSus: 0, trumpUsed: false },
     over: false, endT: 0, shake: 0, hbT: 0, flash: 0, lastFart: -9
   };
   buildBg(L); mode = "play"; hideAll();
@@ -109,7 +109,7 @@ function useTrump() {
 // Кандидаты: ты, все персонажи и предметы (гроб). Виноват тот, кто ближе к облаку.
 function blameTarget(n, cx) {
   const cands = [{ me: true, x: G.me.x, n: "ты" }];
-  for (const o of G.npcs) { if (o === n && Math.abs(o.x - cx) > 75) continue; cands.push({ o, x: o.x, n: o.n, self: o === n }); }
+  for (const o of G.npcs) { if (o === n && (n.sniffer || Math.abs(o.x - cx) > 75)) continue; cands.push({ o, x: o.x, n: o.n, self: o === n }); }
   for (const p of (G.L.props || [])) cands.push({ prop: p, x: p.x, n: p.n });
   cands.sort((a, b) => Math.abs(a.x - cx) - Math.abs(b.x - cx));
   return cands[0];
@@ -165,7 +165,7 @@ function update(dt) {
   G.floats.forEach(f => f.t += dt); G.floats = G.floats.filter(f => f.t < 1.8);
   G.npcs.forEach(n => { if (n.bubble) { n.bubble.t += dt; if (n.bubble.t > n.bubble.dur) n.bubble = null; } });
   G.shake = Math.max(0, G.shake - dt * 12); G.flash = Math.max(0, G.flash - dt * 2);
-  if (G.over) { G.endT -= dt; updateBed(0, 700); if (G.endT <= 0) showResult(); return; }
+  if (G.over) { G.endT -= dt; updateBed(0, 700); if (G.endT <= 0) { if (G.result.win) { G.endT = 99; storyAfter(G.L, showResult); } else showResult(); } return; }
 
   // события
   for (const e of G.evs) if (G.t >= e.next) {
@@ -221,7 +221,7 @@ function update(dt) {
       }
     }
   }
-  for (const s of G.sources) if (s.kind === "fart" && s.t >= s.dur && !s.wasHeard && s.power >= 80 && s.loud < 130) G.stats.big++;
+  for (const s of G.sources) if (s.kind === "fart" && s.t >= s.dur && !s.wasHeard && s.loud < 130) G.stats.cleanPowers.push(s.power);
   G.sources = G.sources.filter(s => s.t < s.dur);
   G.npcs.forEach(n => n.heardAcc = Math.max(0, n.heardAcc - dt * 0.6)); G.heardT = Math.max(0, G.heardT - dt);
 
@@ -244,7 +244,8 @@ function update(dt) {
     for (const v of fl.vents) if (Math.abs(c.x - v.x) < v.w) { k += v.k; c.x += (v.x - c.x) * Math.min(1, dt * 1.2); c.vented = true; }
     c.s *= Math.exp(-k * dt);
     if (c.x < xmin || c.x > xmax) { if (fl.open) { c.s = 0; c.vented = true; } else { c.x = clamp(c.x, xmin, xmax); c.pv *= -0.4; } }
-    if (L.candle && c.s > 7 && Math.abs(c.x - L.candle) < 42) {
+    c.candleT = L.candle && c.s > 7 && Math.abs(c.x - L.candle) < 42 ? (c.candleT || 0) + dt : 0;
+    if (c.candleT > 0.4) {
       addFx("ПЫХ!", L.candle, 380, 70, ORG); G.flash = .8; G.sources.push({ kind: "rumble", loud: 40, t: 0, dur: 0.5, reacted: new Set() }); if (canPlay()) noiseBurst(0, 0.5, "lowpass", 500, 0.8);
       if (!ws.length) { G.stats.burned++; addFloat("УЛИКИ СОЖЖЕНЫ", L.candle, 320, YEL, 26); } c.s = 0;
     }
@@ -303,7 +304,7 @@ function goalDone(g, st, won) {
     case "frameWho": return (st.framedBy[g.who] || 0) >= 1;
     case "vent": return st.vented >= g.n;
     case "burn": return st.burned >= g.n;
-    case "big": return st.big >= g.n;
+    case "big": return st.cleanPowers.filter(p => p >= g.p).length >= g.n;
     case "noHeard": return won && st.heard === 0;
     case "noBlame": return won && st.blamed === 0;
     case "noTrump": return won && !st.trumpUsed;
@@ -325,7 +326,7 @@ function goalFailed(g, st) {
 }
 function goalProgress(g, st) {
   if (g.k === "vent") return `${Math.min(st.vented, g.n)}/${g.n}`;
-  if (g.k === "big") return `${Math.min(st.big, g.n)}/${g.n}`;
+  if (g.k === "big") return `${Math.min(st.cleanPowers.filter(p => p >= g.p).length, g.n)}/${g.n}`;
   if (g.k === "farts") return `${st.farts}/${g.n}`;
   return "";
 }
@@ -340,7 +341,7 @@ function showResult() {
     $("rsStars").textContent = `${sec} с`;
     $("rsText").textContent = (r.why === "burst" ? "Тебя разорвало на перегоне. " : "Тебя вычислили. ") + (isRec ? "Это новый рекорд!" : `Рекорд: ${rec} с.`);
     $("rsStats").innerHTML = [["Продержался", sec + " с"], ["Рекорд", Math.max(sec, rec) + " с"], ["Залпов", G.stats.farts], ["Подставил других", G.stats.framed + " раз"]].map(([a, b]) => `<span>${a}</span><b>${b}</b>`).join("");
-    $("rsGoals").innerHTML = ""; $("bRsNext").style.display = "none"; show("ovResult"); return;
+    $("rsGoals").innerHTML = ""; $("bRsNext").style.display = "none"; $("rsPaper").style.display = "none"; show("ovResult"); return;
   }
   const goals = (L.goals || []).map(g => goalDone(g, G.stats, r.win));
   if (r.win) {
@@ -351,6 +352,8 @@ function showResult() {
   const prev = save.goals[L.id] || [];
   save.goals[L.id] = goals.map((d, i) => d || !!prev[i]); persist();
   $("rsStars").textContent = r.win ? "★".repeat(st) + "☆".repeat(3 - st) : "💀";
+  $("rsPaper").style.display = r.win ? "none" : "";
+  if (!r.win) $("rsHead").textContent = L.news ? L.news[r.why === "burst" ? 1 : 0] : "";
   $("rsText").textContent = r.win ? L.win + (levelIdx === LEVELS.length - 1 ? " Ты прошёл всю игру. Тебе больше нечего бояться. Кроме смерти. И шаурмы." : "")
     : r.why === "burst" ? "Звук был слышен в соседнем районе. Сейсмологи зафиксировали толчок в 3 балла. Штаны не выжили." : L.lose;
   $("rsGoals").innerHTML = (L.goals || []).map((g, i) => `<div class="${goals[i] ? "ok" : prev[i] ? "old" : "no"}">${goals[i] ? "✔" : prev[i] ? "✔" : "✘"} ${g.t}${!goals[i] && prev[i] ? " <i>(выполнено раньше)</i>" : ""}</div>`).join("");

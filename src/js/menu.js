@@ -6,13 +6,14 @@ function buildLevels() {
   LEVELS.forEach((L, i) => {
     const locked = i + 1 > save.unlocked, st = save.stars[L.id] || 0, d = document.createElement("div"); d.className = "lv" + (locked ? " locked" : "");
     const gd = (save.goals[L.id] || []).filter(Boolean).length;
-    d.innerHTML = `<div class="num">${i + 1}</div><div class="em">${locked ? "🔒" : L.em}</div><div class="nm">${L.name}</div><div class="sk">${"💀".repeat(L.skulls)}</div><div class="st">${"★".repeat(st)}${"☆".repeat(3 - st)}</div><div class="gl">🎯 ${gd}/${(L.goals || []).length}</div>`;
-    if (!locked) d.onclick = () => { initAudio(); openIntro(i); }; g.appendChild(d);
+    d.innerHTML = `<div class="num">${i + 1}</div><div class="day">${L.day || ""}</div><div class="em">${locked ? "🔒" : L.em}</div><div class="nm">${L.name}</div><div class="sk">${"💀".repeat(L.skulls)}</div><div class="st">${"★".repeat(st)}${"☆".repeat(3 - st)}</div><div class="gl">🎯 ${gd}/${(L.goals || []).length}</div>`;
+    if (!locked) d.onclick = () => { initAudio(); storyBefore(i, () => openIntro(i)); }; g.appendChild(d);
   });
   const e = $("bEndless"), open = save.unlocked >= 3;
   e.className = "endless" + (open ? "" : " locked");
   e.innerHTML = open ? `♾️ СМЕНА В МЕТРО <small>бесконечный режим · рекорд ${save.endless || 0} с</small>` : `🔒 СМЕНА В МЕТРО <small>откроется после «Опенспейса»</small>`;
-  e.onclick = open ? () => { initAudio(); openIntro(-1); } : null;
+  e.onclick = open ? () => { initAudio(); storyBefore(-1, () => openIntro(-1)); } : null;
+  $("bStory").style.display = storyAll().length ? "" : "none";
 }
 function openIntro(i) {
   levelIdx = i; const L = i < 0 ? ENDLESS : LEVELS[i];
@@ -24,7 +25,18 @@ function openIntro(i) {
   $("inGoals").innerHTML = "<b>ДОП. ЦЕЛИ (по желанию)</b>" + (L.goals || []).map((g, k) => `<div class="${done[k] ? "ok" : ""}">${done[k] ? "✔" : "•"} ${g.t}</div>`).join("");
   mode = "intro"; G = null; show("ovIntro");
 }
-$("bPlay").onclick = () => { initAudio(); buildLevels(); show("ovLevels"); mode = "levels"; };
+function toLevels() { buildLevels(); show("ovLevels"); mode = "levels"; }
+function askName(then) { $("nameIn").value = save.name || ""; mode = "name"; show("ovName"); setTimeout(() => $("nameIn").focus(), 50); askName.then = then; }
+function nameDone() {
+  const v = $("nameIn").value.replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 16);
+  save.name = v || "Гена"; persist(); (askName.then || (() => show("ovMenu")))();
+}
+$("bNameOk").onclick = nameDone;
+$("nameIn").addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Enter") nameDone(); });
+$("bName").onclick = () => askName(() => { mode = "menu"; show("ovMenu"); });
+$("bPlay").onclick = () => { initAudio(); if (!save.name) askName(toLevels); else toLevels(); };
+$("bStory").onclick = () => playStory("all", storyAll(), toLevels, true);
+$("bInScene").onclick = () => { const i = levelIdx, L = i < 0 ? ENDLESS : LEVELS[i]; playStory("x", i < 0 ? STORY.endless : STORY.before[L.id], () => openIntro(i), true); };
 $("bHow").onclick = () => show("ovHow"); $("bHowBack").onclick = () => show("ovMenu");
 $("bCred").onclick = () => { $("credList").innerHTML = CREDITS.length ? CREDITS.map(c => `<div>🔊 <b>${c.title}</b> — ${c.author}, ${c.license}<br><span style="opacity:.7">${c.url}</span></div>`).join("") : "<div>Все звуки синтезированы.</div>"; show("ovCred"); };
 $("bCredBack").onclick = () => show("ovMenu");
@@ -46,6 +58,8 @@ function releaseFire() { if (mode === "play" && G && !G.over && G.charging) rele
 addEventListener("keydown", e => {
   if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault();
   if (e.repeat) return; keys[e.code] = true;
+  if (mode === "cutscene") { if (e.code === "Space" || e.code === "Enter" || e.code === "ArrowRight") csNext(); if (e.code === "Escape") csSkip(); return; }
+  if (mode === "name") return;
   if (e.code === "KeyM") muted = !muted;
   if (mode === "intro" && e.code === "Enter") { initAudio(); startLevel(levelIdx); return; }
   if (mode === "pause" && e.code === "Escape") { hideAll(); mode = "play"; return; }

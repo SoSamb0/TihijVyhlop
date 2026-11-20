@@ -32,7 +32,7 @@ function drawPlayer(t) {
   { const a = sus ? headPos(sus) : G.L.focus, b = headPos(me), dx = a.x - b.x, dy = a.y - b.y, m = Math.hypot(dx, dy) || 1; look = { x: dx / m, y: dy / m }; }
   SEED = 500;
   drawChar(me, { st: G.over && !G.result.win ? "shock" : "watch", expr, look, t, skin, tilt: (pose === "dog" ? 0.55 : pose === "child" ? 0.3 : 0) + (G.rumble.on ? Math.sin(t * 40) * 0.03 : 0), arm: G.fanDir < 0 ? "fanL" : G.fanDir > 0 ? "fanR" : G.rumble.on ? "belly" : "down", puff: charging && G.power > 40, bulge: p > 0.85 ? 1.25 : 1, worried: p > 0.6, vein: p > 0.8, sweat: p > 0.88 ? 4 : p > 0.75 ? 2 : p > 0.6 ? 1 : 0, blush: charging && G.power > 55 ? "#ff2d95aa" : null });
-  const h = headPos(me); if (G.t < 3) TO("▼ ТЫ", h.x, h.y - 100 + Math.sin(t * 6) * 5, 28, YEL);
+  const h = headPos(me); if (G.t < 3) TO("▼ " + playerName().toUpperCase(), h.x, h.y - 100 + Math.sin(t * 6) * 5, 28, YEL);
 }
 function drawGame(t) {
   const L = G.L, me = G.me;

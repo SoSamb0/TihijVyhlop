@@ -7,7 +7,7 @@
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ORDER = ["util", "save", "audio", "lines", "chars", "levels", "game", "scenes", "render", "touch", "menu", "main"]
+ORDER = ["util", "save", "audio", "lines", "chars", "levels", "game", "scenes", "render", "story", "touch", "menu", "main"]
 
 
 def rd(*p):

@@ -43,6 +43,12 @@ p{font-size:18px;line-height:1.4;margin:7px 0;font-weight:500}
 .rule{background:var(--ink);color:var(--lime);font:900 17px Rubik;padding:8px 14px;margin:8px 0;transform:rotate(-1deg)}
 .keys{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;text-align:left;margin:8px auto;font-size:16px;font-weight:500}
 kbd{font:900 15px Rubik;background:#fff;border:3px solid var(--ink);border-radius:6px;padding:2px 8px;box-shadow:3px 3px 0 var(--ink);white-space:nowrap}
+.lv .day{font:900 12px Rubik;background:var(--ink);color:var(--yel);display:inline-block;padding:1px 8px;margin-bottom:2px;transform:rotate(-2deg)}
+#nameIn{font:900 34px Rubik;text-align:center;width:340px;padding:10px;border:5px solid var(--ink);border-radius:8px;box-shadow:5px 5px 0 var(--ink);margin:12px 0;color:var(--ink);background:#fff}
+.paper{background:#f2ecdc;border:4px solid var(--ink);padding:8px 16px 12px;margin:6px auto 10px;max-width:640px;transform:rotate(-1.2deg);box-shadow:6px 6px 0 #0004;font-family:Georgia,serif}
+.paper .mast{font:900 30px Georgia,serif;letter-spacing:2px;border-bottom:3px double var(--ink)}
+.paper .date{font:italic 13px Georgia,serif;border-bottom:1px solid var(--ink);padding:2px 0;margin-bottom:6px}
+.paper .head{font:900 24px Rubik;line-height:1.15;text-transform:uppercase}
 .lv .gl{font-size:12px;font-weight:800;color:#0a7a3a}
 .endless{display:flex;align-items:center;justify-content:center;gap:14px;background:var(--ink);color:#fff;border:5px solid var(--ink);border-radius:6px 16px 6px 14px;padding:10px 18px;margin:4px auto 10px;max-width:620px;cursor:pointer;box-shadow:6px 6px 0 var(--mag);font:900 20px Rubik}
 .endless:hover{background:#3a1a55}
@@ -90,13 +96,22 @@ kbd{font:900 15px Rubik;background:#fff;border:3px solid var(--ink);border-radiu
       <button class="btn" id="bHow">КАК ИГРАТЬ</button>
       <button class="btn" id="bCred">ЗВУКИ И АВТОРЫ</button>
     </div>
+    <button class="btn small" id="bName">👤 сменить имя</button>
     <button class="btn small" id="bReset">сбросить прогресс</button>
+  </div></div>
+
+  <div class="ov" id="ovName"><div class="card">
+    <h2>КАК ТЕБЯ ЗОВУТ?</h2>
+    <p>Это имя будет у героя. До свадьбы неделя, а внутри — шаурма дяди Толи.</p>
+    <input id="nameIn" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Гена">
+    <div><button class="btn pink" id="bNameOk">ГОТОВО</button></div>
   </div></div>
 
   <div class="ov" id="ovLevels"><div class="card" style="max-width:1020px">
     <h2>ВЫБЕРИ МЕСТО ПОЗОРА</h2>
     <div class="grid" id="lvGrid"></div>
     <div class="endless" id="bEndless"></div>
+    <button class="btn" id="bStory">📖 ИСТОРИЯ</button>
     <button class="btn" id="bLvBack">← НАЗАД</button>
   </div></div>
 
@@ -129,6 +144,7 @@ kbd{font:900 15px Rubik;background:#fff;border:3px solid var(--ink);border-radiu
     <div class="tips" id="inTips"></div>
     <div class="goals" id="inGoals"></div>
     <button class="btn pink" id="bStart">НАЧАТЬ (Enter)</button>
+    <button class="btn" id="bInScene">▶ СЦЕНА</button>
     <button class="btn" id="bInBack">← К УРОВНЯМ</button>
   </div></div>
 
@@ -142,6 +158,7 @@ kbd{font:900 15px Rubik;background:#fff;border:3px solid var(--ink);border-radiu
 
   <div class="ov" id="ovResult"><div class="card">
     <h2 id="rsTitle"></h2>
+    <div class="paper" id="rsPaper"><div class="mast">ВЕЧЕРНИЙ ВЫХЛОП</div><div class="date">суббота · экстренный выпуск · цена 5 ₽</div><div class="head" id="rsHead"></div></div>
     <div class="stars" id="rsStars"></div>
     <p class="dark" id="rsText"></p>
     <div class="goals" id="rsGoals"></div>
@@ -597,13 +614,13 @@ const LEVELS = [
     id: "home", hard: 0.9, em: "🛋️", name: "Диван у телика", skulls: 1, base: 34, surface: 0.6, surfName: "мягкий диван", g0: 0.9, sp: [13, 17], spT: [8, 10],
     stink: 1.3, decay: 0.09, wind: () => 0, closed: true, vents: [{ x: 165, w: 140, k: 1.6, name: "форточка" }], focus: { x: 1090, y: 330 }, tint: 900, px: 640,
     rule: "Обучение. Телик орёт, диван глушит. Облако гони влево, к форточке.",
-    intro: "Семейный вечер. Батя смотрит футбол, баба Зина дремлет. Или уже не дремлет — с обеда никто не проверял.",
+    intro: "Понедельник. Ты только что съел шаурму дяди Толи. Батя празднует твою последнюю холостую неделю, баба Зина дремлет. Или уже не дремлет — с обеда никто не проверял.",
     win: "Серия кончилась. Ты выжил. Баба Зина, кстати, тоже — проверили.", lose: "Семья пересмотрела завещание. Квартиру получил Барсик.",
-    tips: ["Слабый залп ничего не выпускает: держи пробел подольше.", "Баба Зина иногда включает слуховой аппарат (🦻) и слышит ВСЁ.", "Барсик сидит справа: если облако ближе к нему, виноват кот."],
+    tips: ["Слабый залп ничего не выпускает: держи пробел подольше.", "Баба Зина иногда включает слуховой аппарат (🦻) и слышит ВСЁ.", "Барсик сидит между тобой и бабой Зиной: подгони облако к нему — и виноват кот."],
     npcs: [
       CH("Батя", 255, { skin: "#f2a57e", head: { w: 56, h: 52, jaw: 1.2, skull: .85 }, eyes: { l: .8, r: .9, gap: .4, bags: true, vein: true }, nose: { t: "potato", s: 1.6, col: "#e0245e" }, brow: "uni", must: true, hair: "comb", hairC: "#3a2616", stubble: true, chin2: true, body: { w: 96, h: 66, pat: "mayka", pants: "#2b4a8a", fat: .78 }, prop: "beer", hear: 1.0, beh: { watch: .75, phone: .1, stare: .15 } }),
       CH("Баба Зина", 450, { skin: "#f6d9c4", head: { w: 46, h: 52, jaw: .95 }, eyes: { l: .8, r: .8, gap: .42, bags: true }, nose: { t: "hook", s: 1.3 }, brow: "thin", hair: "scarf", hairC: MAG, glasses: true, wart: true, teeth: "gap", aid: { every: [15, 21], dur: 5 }, body: { w: 78, h: 60, col: PUR, pat: "dots", col2: YEL, pants: "#5a3a2a", fat: .7 }, hear: 0.7, beh: { sleep: .6, watch: .3, stare: .1 } }),
-      CH("Барсик", 850, { kind: "cat", y: 452, hear: 1.3, sm: 0.15, scape: true, beh: { sleep: .5, watch: .2, stare: .3 } })
+      CH("Барсик", 545, { kind: "cat", y: 452, hear: 1.3, sm: 0.15, scape: true, beh: { sleep: .5, watch: .2, stare: .3 } })
     ],
     events: [
       { name: "Смех за кадром", icon: "😂", amb: 22, dur: [2, 3], every: [6, 9], warn: 1.5, snd: "laugh" },
@@ -615,7 +632,7 @@ const LEVELS = [
     id: "metro", hard: 1.03, em: "🚇", name: "Метро в час пик", skulls: 2, base: 46, surface: 0.9, surfName: "пластиковое сиденье", g0: 1.0, sp: [15, 19], spT: [7.5, 9.5],
     stink: 0.9, decay: 0.08, wind: () => 28, closed: true, vents: [], focus: { x: 640, y: 250 }, tint: 400, px: 600,
     rule: "Сквозняк тянет облако вправо. На остановке тихо, зато двери открыты: всё вылетает влево.",
-    intro: "Час пик. 47 человек на квадратный метр. Отступать некуда, вентиляции нет, надежды тоже.",
+    intro: "Вторник, утро. Час пик. 47 человек на квадратный метр, а внутри тебя — шаурма. Отступать некуда.",
     win: "Твоя станция. Ты выходишь героем. Сзади кто-то потерял сознание, но это не доказать.", lose: "Тебя сняли и выложили в «Подслушано в метро». 40 тысяч лайков. Мама тоже лайкнула.",
     tips: ["Кеша в наушниках глухой, но на остановке он их снимает.", "Тётя Люда — сплетница: если что заметит, насторожит весь вагон.", "Дед Пихто спит справа. Сквозняк сам несёт облако к нему."],
     npcs: [
@@ -633,7 +650,7 @@ const LEVELS = [
     id: "office", hard: 0.8, em: "💼", name: "Опенспейс", skulls: 2, base: 22, surface: 1.0, surfName: "кожзам-кресло", g0: 1.0, sp: [16, 20], spT: [7.5, 9.5],
     stink: 1.2, decay: 0.07, wind: t => Math.sin(t * 0.5) * 75, closed: true, vents: [{ x: 1165, w: 100, k: 1.4, name: "вытяжка" }], focus: { x: 640, y: 380 }, tint: 1200, px: 620,
     rule: "Кондиционер гоняет воздух туда-сюда. Начальник ходит и нюхает всё на своём пути.",
-    intro: "Квартальный отчёт, кондиционер и слухи о сокращениях. Один громкий звук — и ты первый в списке.",
+    intro: "Вторник. Квартальный отчёт и слухи о сокращениях. Один громкий звук — и ты первый в списке.",
     win: "Рабочий день окончен. Сократили Виталика. Совпадение? Лучше не думай.", lose: "Тебя не уволили. Хуже: теперь тебя зовут «Пердунов» даже в приказах.",
     tips: ["Не сиди в собственном облаке, когда мимо идёт шеф.", "Смотри на пылинки: они показывают, куда дует.", "Вытяжка справа съедает облако."],
     npcs: [
@@ -650,12 +667,12 @@ const LEVELS = [
   {
     id: "date", hard: 1.05, em: "🍝", name: "Свидание", skulls: 3, base: 20, surface: 1.1, surfName: "деревянный стул", g0: 1.1, sp: [16, 21], spT: [7.5, 9.5],
     stink: 1.3, decay: 0.06, wind: () => 14, closed: true, vents: [], candle: 640, focus: { x: 810, y: 470 }, tint: 1000, px: 470,
-    rule: "Даша смотрит тебе в лицо: нельзя долго тужиться (сила выше 55% под её взглядом). Облако можно сжечь над свечой.",
-    intro: "Третье свидание. Ты заказал фасолевый суп. Ты всегда принимаешь плохие решения — это твоя суперсила.",
+    rule: "Лена смотрит тебе в лицо: нельзя долго тужиться (сила выше 55% под её взглядом). Облако можно сжечь над свечой.",
+    intro: "Среда. Последний ужин с Леной перед свадьбой. Ты заказал фасолевый суп. Ты всегда принимаешь плохие решения.",
     win: "Она согласилась на четвёртое свидание. Если бы она только знала...", lose: "Она ушла. Через полгода выйдет за официанта. На свадьбе будут рассказывать про тебя.",
-    tips: ["Набирай силу, пока она в телефоне (📱).", "Догони облако до свечи: ПЫХ — и улик нет.", "У официанта Жоржа очень тонкий нюх."],
+    tips: ["Набирай силу, пока Лена в телефоне (📱).", "Задержи облако над свечой: ПЫХ — и улик нет. Если просто пролетит мимо — не сгорит.", "У официанта Жоржа очень тонкий нюх."],
     npcs: [
-      CH("Даша", 810, { skin: "#ffd9c0", head: { w: 46, h: 56, jaw: .7 }, eyes: { l: 1.3, r: 1.3, gap: .46 }, nose: { t: "button", s: .9 }, hair: "long", hairC: "#3a0a3a", lips: true, blushC: "#ff2d9566", earring: true, faceWatch: true, body: { w: 64, h: 62, col: MAG, pants: "#333", fat: .5 }, hear: 1.1, sm: 1.2, beh: { stare: .45, phone: .35, watch: .2 } }),
+      CH("Лена", 810, { skin: "#ffd9c0", head: { w: 46, h: 56, jaw: .7 }, eyes: { l: 1.3, r: 1.3, gap: .46 }, nose: { t: "button", s: .9 }, hair: "long", hairC: "#3a0a3a", lips: true, blushC: "#ff2d9566", earring: true, faceWatch: true, body: { w: 64, h: 62, col: MAG, pants: "#333", fat: .5 }, hear: 1.1, sm: 1.2, beh: { stare: .45, phone: .35, watch: .2 } }),
       CH("Жорж", 300, { pose: "stand", y: 470, skin: "#f6e0b0", head: { w: 40, h: 64, jaw: .7, tilt: -.08 }, eyes: { l: .6, r: .6, gap: .42 }, nose: { t: "hook", s: 1.8 }, brow: "thin", hair: "comb", hairC: INK, must: true, body: { w: 62, h: 76, col: "#fff", pat: "bow", pants: INK, fat: .5 }, hear: 0.9, nosey: 3.5, walk: { a: 170, b: 1150, speed: 70 }, beh: { watch: .7, stare: .3 } }),
       CH("Старик", 1090, { skin: "#d9a98a", head: { w: 46, h: 52, jaw: 1.0 }, eyes: { l: .8, r: .8, gap: .42, bags: true }, nose: { t: "potato", s: 1.5 }, hair: "bald3", glasses: true, scape: true, body: { w: 72, h: 60, col: "#6b5b45", pat: "hatch", pants: "#333" }, hear: 0.5, beh: { sleep: .6, watch: .3, stare: .1 } })
     ],
@@ -669,7 +686,7 @@ const LEVELS = [
     id: "cinema", hard: 1.1, em: "🎬", name: "Кинотеатр", skulls: 3, base: 13, surface: 0.75, surfName: "бархатное кресло", g0: 1.1, sp: [17, 22], spT: [7, 9],
     stink: 1.2, decay: 0.07, wind: () => -22, closed: false, vents: [{ x: 150, w: 90, k: 1.2, name: "выход" }], dark: true, focus: { x: 640, y: 150 }, tint: 600, px: 620,
     rule: "Темно. Кто на тебя смотрит, видно только во время вспышек на экране.",
-    intro: "Премьера артхаусной драмы о смерти. Три часа. Половина фильма — многозначительная тишина.",
+    intro: "Среда, полночь. Не спится. Арт-хаус про смерть, три часа, половина фильма — многозначительная тишина.",
     win: "Титры. Критик плакал. Он думает, что от фильма.", lose: "Вовочка показал на тебя пальцем. Зал аплодировал. Это была лучшая сцена фильма.",
     tips: ["Взрыв на экране — идеальное прикрытие и вспышка света.", "Вовочка-ябеда орёт на весь зал: от него подозрение ×2.", "Парочка слева занята друг другом и почти глуха."],
     npcs: [
@@ -688,7 +705,7 @@ const LEVELS = [
     id: "elevator", hard: 0.95, em: "🛗", name: "Лифт застрял", skulls: 4, base: 14, surface: 1.0, surfName: "стоишь (ноль амортизации)", g0: 1.1, sp: [17, 22], spT: [7, 9],
     stink: 1.4, decay: 0.012, wind: () => 0, closed: true, xmin: 250, xmax: 1030, vents: [], focus: { x: 640, y: 200 }, tint: 900, px: 620, standAll: true,
     rule: "Воздух не уходит: облака копятся. Выгнать их можно только когда двери приоткрываются (справа).",
-    intro: "Лифт встал между 13 и 14 этажами. Три человека, одна собака и ноль окон. Воздух общий. Пока что.",
+    intro: "Четверг. Едешь в ЗАГС подавать документы. Лифт встал между 13 и 14 этажами. Воздух общий. Пока что.",
     win: "Лифт поехал. Ты вышел первым. Остальных откачивали минут пять.", lose: "Пожарные открыли двери и отказались заходить. Тебя оставили там до утра.",
     tips: ["Мопс Жужа идёт на запах и лает на того, кто ближе к облаку.", "Копи облако у правой стены и жди, когда двери дёрнутся.", "Чем крупнее залп, тем больше облако. А деваться ему некуда."],
     npcs: [
@@ -707,7 +724,7 @@ const LEVELS = [
     id: "library", hard: 1.15, em: "📚", name: "Библиотека", skulls: 4, base: 12, surface: 1.05, surfName: "деревянная скамья", g0: 0.9, sp: [15, 19], spT: [8, 10],
     stink: 0.95, decay: 0.08, wind: () => -16, closed: true, vents: [{ x: 170, w: 100, k: 1.5, name: "окно" }], focus: { x: 640, y: 520 }, tint: 2500, px: 600,
     rule: "Почти полная тишина. Сбросить давление можно только под кашель, часы и падающие книги.",
-    intro: "Здесь слышно, как пыль оседает на книги. Изольда Марковна работает тут с 1974 года. Она слышала всё.",
+    intro: "Четверг, вечер. Ищешь лекарство от проклятой шаурмы. Изольда Марковна работает тут с 1974 года. Она слышала всё.",
     win: "Ты вышел незамеченным. Изольда Марковна всё равно записала тебя в чёрную книжечку.", lose: "Тебя внесли в чёрный список. Пожизненно. Изольда Марковна переживёт нас всех.",
     tips: ["Изольда Марковна слышит лучше всех. Не рискуй, когда она смотрит на тебя.", "Окно слева: лёгкий сквозняк тянет облако туда, мимо ботаника.", "Стопка книг падает громче всего: будь готов."],
     npcs: [
@@ -725,7 +742,7 @@ const LEVELS = [
     id: "exam", hard: 0.95, em: "📝", name: "Экзамен", skulls: 4, base: 9, surface: 1.1, surfName: "школьный стул", g0: 1.0, sp: [16, 20], spT: [7.5, 9.5],
     stink: 1.25, decay: 0.06, wind: () => 16, closed: true, vents: [{ x: 1165, w: 100, k: 1.5, name: "окно" }], focus: { x: 640, y: 540 }, tint: 2000, px: 620,
     rule: "Зубрилина следит за тобой почти не отрываясь и ябедничает. Препод ходит между рядами.",
-    intro: "Экзамен, от которого зависит всё. Говорят, последнего, кто пукнул, отчислили посмертно.",
+    intro: "Пятница, утро. Тёща поставила условие: без диплома дочь не отдаст. Это пересдача, которую ты завалил 15 лет назад.",
     win: "Тройка! Жить можно. Недолго, но можно.", lose: "Отчислен. Не за запах — за моральный ущерб Зубрилиной. Она до сих пор ходит к психологу.",
     tips: ["Гром за окном — подарок небес.", "Колян справа списывает и ничего не замечает. Идеальный виноватый.", "Когда препод рядом — замри и не тужься."],
     npcs: [
@@ -743,7 +760,7 @@ const LEVELS = [
     id: "funeral", hard: 0.7, em: "⚰️", name: "Похороны дяди Толи", skulls: 5, base: 6, surface: 1.2, surfName: "церковная скамья", g0: 1.1, sp: [17, 21], spT: [7, 9],
     stink: 1.25, decay: 0.05, wind: () => 12, closed: true, vents: [{ x: 1195, w: 110, k: 1.6, name: "ладан" }], props: [{ n: "дядя Толя (покойник)", x: 1000, scape: true }], focus: { x: 1000, y: 460 }, tint: 700, px: 560,
     rule: "Долгие минуты молчания. Зато рядом покойник: догони облако до гроба — и виноват он. Ладан батюшки глушит запах.",
-    intro: "Дядя Толя всегда говорил: «На моих похоронах не грустите». Ну что ж. Тебе точно будет не до грусти.",
+    intro: "Пятница. Дядя Толя умер — от собственной шаурмы. Он всегда говорил: «На моих похоронах не грустите». Тебе точно будет не до грусти.",
     win: "Дядю Толю похоронили. Вместе с твоей тайной. Он бы гордился.", lose: "Вдова назвала это худшим днём в своей жизни. И дело было не в дяде Толе.",
     tips: ["Оркестр играет громко и долго: копи к нему.", "Перед минутой молчания выпусти всё, что можешь.", "«Посмертные газы — научный факт»."],
     npcs: [
@@ -761,7 +778,7 @@ const LEVELS = [
     id: "yoga", hard: 1.0, em: "🧘", name: "Ретрит молчания", skulls: 5, base: 6, surface: 0.85, surfName: "коврик для йоги", g0: 1.1, sp: [17, 21], spT: [7, 9],
     stink: 1.3, decay: 0.05, wind: () => 0, closed: true, vents: [{ x: 180, w: 100, k: 1.5, name: "аромалампа" }], focus: { x: 1060, y: 420 }, tint: 2500, px: 580, lotusAll: true,
     rule: "Позы всё меняют. «Собака мордой вниз»: громкость ×1.6 и +12 давления. «Поза ребёнка»: громкость ×0.5 — твой шанс.",
-    intro: "Ретрит молчания. Десять дней без слов. Ты — единственное, что может нарушить тишину. И кишечник это знает.",
+    intro: "Суббота, 7 утра. До свадьбы пять часов. Гуру Шанти обещал очистить карму и кишечник за одно утро.",
     win: "Ты достиг просветления. Буквально: тебе стало очень, очень легко.", lose: "Тебя изгнали с ретрита. Карма испорчена на три перерождения. В следующей жизни ты — скунс.",
     tips: ["Почти абсолютная тишина.", "Хоровое «Ом-м-м» и гонг — единственное громкое, что тут есть.", "Аромалампа слева съедает облако."],
     npcs: [
@@ -778,17 +795,17 @@ const LEVELS = [
     ]
   },
   {
-    id: "wedding", hard: 1.08, em: "💒", name: "Свадьба (финал)", skulls: 5, base: 10, surface: 1.0, surfName: "стоишь у алтаря", g0: 1.1, sp: [17, 21], spT: [7, 9],
-    stink: 1.3, decay: 0.05, wind: () => 10, closed: true, vents: [{ x: 1205, w: 100, k: 1.6, name: "балкон" }], focus: { x: 760, y: 380 }, tint: 1400, px: 580, standAll: true, boss: true,
+    id: "wedding", hard: 0.95, em: "💒", name: "Свадьба (финал)", skulls: 5, base: 10, surface: 1.0, surfName: "стоишь у алтаря", g0: 1.1, sp: [17, 21], spT: [7, 9],
+    stink: 1.3, decay: 0.05, wind: () => 10, closed: true, vents: [{ x: 1235, w: 60, k: 1.8, name: "балкон" }], focus: { x: 760, y: 380 }, tint: 1400, px: 580, standAll: true, boss: true,
     rule: "ФИНАЛ. Всё идёт по сценарию: на клятвах и фото на тебя смотрят ВСЕ. Зато «Горько!» и салют — громче всего в игре.",
-    intro: "Твоя свадьба. Ты стоишь у алтаря, рядом Лена в белом, сзади тёща. Вчера был мальчишник с шаурмой. Шаурма ещё здесь.",
+    intro: "Суббота. Твоя свадьба. Рядом Лена в белом, сзади тёща. Шаурма дяди Толи всё ещё здесь. Это последний бой.",
     win: "Вы женаты! Лена ничего не заподозрила. Тёща — заподозрила, но промолчала: ей это ещё пригодится.", lose: "Свадьбу сняли на три камеры. Видео посмотрели 4 миллиона раз. Лена ушла к тамаде.",
-    tips: ["Сценарий одинаковый каждый раз: выучи его.", "На клятвах и фото все смотрят на тебя: не стреляй, даже если очень хочется.", "Балкон справа: туда можно выгнать облако. Тамада Гоша пьян и отлично подходит на роль виноватого."],
+    tips: ["Сценарий одинаковый каждый раз: выучи его.", "На клятвах и фото все смотрят на тебя: не стреляй, даже если очень хочется.", "Балкон справа: туда можно выгнать облако. Тамада Гоша стоит рядом с невестой, пьян и отлично подходит на роль виноватого."],
     npcs: [
       CH("Тёща Тамара", 330, { pose: "stand", y: 470, skin: "#f2a57e", head: { w: 54, h: 56, jaw: 1.15 }, eyes: { l: .85, r: .85, gap: .4, vein: true }, nose: { t: "hook", s: 1.4 }, brow: "thick", hair: "afro", hairC: "#7a2cff", lips: true, chin2: true, earring: true, gossip: true, body: { w: 92, h: 70, col: "#c2185b", pat: "dots", col2: YEL, pants: "#333", fat: .78 }, hear: 1.3, beh: { stare: .45, watch: .55 } }),
       CH("Невеста Лена", 760, { pose: "stand", y: 470, skin: "#ffd9c0", head: { w: 44, h: 56, jaw: .72 }, eyes: { l: 1.3, r: 1.3, gap: .46 }, nose: { t: "button", s: .9 }, hair: "veil", veilC: "#ffffffdd", lips: true, blushC: "#ff2d9566", faceWatch: true, body: { w: 66, h: 74, col: "#fff", pat: "dots", col2: "#ffd6ec", pants: "#fff", fat: .7 }, shoe: "#fff", hear: 1.0, sm: 1.3, beh: { stare: .5, watch: .3, phone: .2 } }),
-      CH("Регистратор Нина Петровна", 975, { pose: "stand", y: 470, skin: "#e8d0c0", head: { w: 46, h: 60, jaw: .8 }, eyes: { l: .8, r: .8, gap: .42 }, nose: { t: "long", s: 1.3 }, brow: "thin", hair: "bun", hairC: "#3a2616", glasses: true, lips: true, body: { w: 76, h: 74, col: "#2b4a8a", pat: "bow", pants: "#222" }, hear: 1.2, beh: { watch: .65, stare: .35 } }),
-      CH("Тамада Гоша", 1130, { pose: "stand", y: 470, skin: "#f2a57e", head: { w: 50, h: 54, jaw: 1.1, tilt: .12 }, eyes: { l: .7, r: .9, gap: .4, bags: true, vein: true }, nose: { t: "potato", s: 1.6, col: "#e0245e" }, brow: "uni", hair: "mullet", hairC: "#6b4a2a", must: true, blushC: "#ff2d9588", scape: true, body: { w: 82, h: 72, col: YEL, pat: "suit", col2: MAG, pants: "#222", fat: .7 }, hear: 0.6, beh: { watch: .5, sleep: .2, stare: .3 } })
+      CH("Регистратор Нина Петровна", 1110, { pose: "stand", y: 470, skin: "#e8d0c0", head: { w: 46, h: 60, jaw: .8 }, eyes: { l: .8, r: .8, gap: .42 }, nose: { t: "long", s: 1.3 }, brow: "thin", hair: "bun", hairC: "#3a2616", glasses: true, lips: true, body: { w: 76, h: 74, col: "#2b4a8a", pat: "bow", pants: "#222" }, hear: 1.2, beh: { watch: .65, stare: .35 } }),
+      CH("Тамада Гоша", 950, { pose: "stand", y: 470, skin: "#f2a57e", head: { w: 50, h: 54, jaw: 1.1, tilt: .12 }, eyes: { l: .7, r: .9, gap: .4, bags: true, vein: true }, nose: { t: "potato", s: 1.6, col: "#e0245e" }, brow: "uni", hair: "mullet", hairC: "#6b4a2a", must: true, blushC: "#ff2d9588", scape: true, body: { w: 82, h: 72, col: YEL, pat: "suit", col2: MAG, pants: "#222", fat: .7 }, hear: 0.6, beh: { watch: .5, sleep: .2, stare: .3 } })
     ],
     events: [
       { at: 1.5, name: "Марш: выход невесты", icon: "🎻", amb: 34, dur: [5, 5], warn: 1.5, snd: "violin" },
@@ -809,18 +826,37 @@ const LEVELS = [
 // Цели: k — что проверяем, n — порог, who — кого подставить. Цели не влияют на звёзды.
 const EXTRA = {
   home: { trump: { name: "Сделать телик погромче", icon: "📺", amb: 40, dur: 4, snd: "crowd" }, goals: [{ k: "frameWho", who: "Барсик", t: "Подставь Барсика" }, { k: "vent", n: 2, t: "Выгони 2 облака в форточку" }, { k: "noHeard", t: "Ни разу не попадись на слух" }] },
-  metro: { trump: { name: "Закашляться", icon: "😷", amb: 38, dur: 3, snd: "cough" }, goals: [{ k: "frameWho", who: "Дед Пихто", t: "Подставь деда Пихто" }, { k: "big", n: 1, t: "Залп на 80%+, и чтобы никто не услышал" }, { k: "noTrump", t: "Обойдись без козыря" }] },
+  metro: { trump: { name: "Закашляться", icon: "😷", amb: 38, dur: 3, snd: "cough" }, goals: [{ k: "frameWho", who: "Дед Пихто", t: "Подставь деда Пихто" }, { k: "big", n: 1, p: 65 }, { k: "noTrump", t: "Обойдись без козыря" }] },
   office: { trump: { name: "Уронить степлер", icon: "📎", amb: 40, dur: 2.5, snd: "crash" }, goals: [{ k: "frameWho", who: "Виталик", t: "Подставь Виталика" }, { k: "vent", n: 2, t: "Отправь 2 облака в вытяжку" }, { k: "noBlame", t: "Пусть тебя ни разу не учуют" }] },
-  date: { trump: { name: "Уронить вилку", icon: "🍴", amb: 42, dur: 2.5, snd: "crash" }, goals: [{ k: "burn", n: 1, t: "Сожги облако над свечой" }, { k: "frameWho", who: "Жорж", t: "Подставь официанта Жоржа" }, { k: "maxSus", n: 30, t: "Подозрение ни разу не выше 30%" }] },
-  cinema: { trump: { name: "Хрустнуть попкорном", icon: "🍿", amb: 38, dur: 3, snd: "crash" }, goals: [{ k: "big", n: 2, t: "Два залпа на 80%+ незаметно" }, { k: "frameWho", who: "Вовочка", t: "Подставь Вовочку-ябеду" }, { k: "noHeard", t: "Ни разу не попадись на слух" }] },
+  date: { trump: { name: "Уронить вилку", icon: "🍴", amb: 42, dur: 2.5, snd: "crash" }, goals: [{ k: "burn", n: 1, t: "Сожги облако над свечой" }, { k: "frameWho", who: "Старик", t: "Подставь старика за соседним столом" }, { k: "maxSus", n: 30, t: "Подозрение ни разу не выше 30%" }] },
+  cinema: { trump: { name: "Хрустнуть попкорном", icon: "🍿", amb: 38, dur: 3, snd: "crash" }, goals: [{ k: "big", n: 2, p: 70 }, { k: "frameWho", who: "Вовочка", t: "Подставь Вовочку-ябеду" }, { k: "noHeard", t: "Ни разу не попадись на слух" }] },
   elevator: { trump: { name: "Нажать «Вызов»", icon: "🔔", amb: 45, dur: 3, snd: "ring" }, goals: [{ k: "vent", n: 2, t: "Выгони 2 облака в двери" }, { k: "frameWho", who: "Бабуля Роза", t: "Подставь бабулю Розу" }, { k: "farts", n: 6, t: "Не больше 6 залпов" }] },
   library: { trump: { name: "Чихнуть", icon: "🤧", amb: 42, dur: 2, snd: "cough" }, goals: [{ k: "frameWho", who: "Соня", t: "Подставь спящую Соню" }, { k: "noHeard", t: "Ни разу не попадись на слух" }, { k: "vent", n: 1, t: "Выгони облако в окно" }] },
-  exam: { trump: { name: "Уронить пенал", icon: "✏️", amb: 40, dur: 2.5, snd: "crash" }, goals: [{ k: "frameWho", who: "Колян", t: "Подставь Коляна" }, { k: "noBlame", t: "Пусть тебя ни разу не учуют" }, { k: "big", n: 1, t: "Залп на 80%+ под гром" }] },
+  exam: { trump: { name: "Уронить пенал", icon: "✏️", amb: 40, dur: 2.5, snd: "crash" }, goals: [{ k: "frameWho", who: "Колян", t: "Подставь Коляна" }, { k: "vent", n: 1, t: "Выгони облако в окно" }, { k: "big", n: 1, p: 60 }] },
   funeral: { trump: { name: "Громко высморкаться", icon: "🤧", amb: 40, dur: 3, snd: "cough" }, goals: [{ k: "frameWho", who: "дядя Толя (покойник)", t: "Свали всё на покойника" }, { k: "vent", n: 2, t: "Утопи 2 облака в ладане" }, { k: "maxSus", n: 40, t: "Подозрение ни разу не выше 40%" }] },
-  yoga: { trump: { name: "Ударить в поющую чашу", icon: "🥣", amb: 40, dur: 3.5, snd: "bowl" }, goals: [{ k: "frameWho", who: "Веган Святослав", t: "Подставь вегана Святослава" }, { k: "noTrump", t: "Обойдись без козыря" }, { k: "maxSus", n: 40, t: "Подозрение ни разу не выше 40%" }] },
-  wedding: { trump: { name: "Уронить кольцо", icon: "💍", amb: 42, dur: 3, snd: "crash" }, goals: [{ k: "frameWho", who: "Тамада Гоша", t: "Подставь тамаду Гошу" }, { k: "noHeard", t: "Ни разу не попадись на слух" }, { k: "big", n: 2, t: "Два залпа на 80%+ незаметно" }] }
+  yoga: { trump: { name: "Ударить в поющую чашу", icon: "🥣", amb: 40, dur: 3.5, snd: "bowl" }, goals: [{ k: "frameWho", who: "Веган Святослав", t: "Подставь вегана Святослава" }, { k: "noTrump", t: "Обойдись без козыря" }, { k: "vent", n: 1, t: "Утопи облако в аромалампе" }] },
+  wedding: { trump: { name: "Уронить кольцо", icon: "💍", amb: 42, dur: 3, snd: "crash" }, goals: [{ k: "frameWho", who: "Тамада Гоша", t: "Подставь тамаду Гошу" }, { k: "noHeard", t: "Ни разу не попадись на слух" }, { k: "big", n: 2, p: 60 }] }
 };
 LEVELS.forEach(L => Object.assign(L, EXTRA[L.id]));
+// текст для целей «мощный залп» собирается из порога
+LEVELS.forEach(L => (L.goals || []).forEach(g => { if (g.k === "big") g.t = `${g.n > 1 ? g.n + " залпа" : "Залп"} на ${g.p}%+ силы, и никто не услышал`; }));
+
+// ---- сюжет: день недели и заголовок газеты при проигрыше (раскрыт / лопнул) ----
+const STORY_META = {
+  home: { day: "Пн, вечер", news: ["СЕМЬЯ ПЕРЕСМОТРЕЛА ЗАВЕЩАНИЕ: КВАРТИРА ДОСТАЛАСЬ КОТУ", "ВЗРЫВ НА ДИВАНЕ: БАБУШКА ПРОСНУЛАСЬ ВПЕРВЫЕ С 2009 ГОДА"] },
+  metro: { day: "Вт, утро", news: ["«ПОДСЛУШАНО В МЕТРО»: 40 ТЫСЯЧ ЛАЙКОВ ЗА ОДНО ВИДЕО", "В МЕТРО ОБНАРУЖЕН НОВЫЙ ИСТОЧНИК ГАЗА. ГАЗОВИКИ ВЫЕХАЛИ НА МЕСТО"] },
+  office: { day: "Вт, день", news: ["СОТРУДНИКА ПЕРЕИМЕНОВАЛИ В «ПЕРДУНОВА» ПРИКАЗОМ ДИРЕКТОРА", "ОФИС ЭВАКУИРОВАН: СОТРУДНИКИ ЖАЛУЮТСЯ НА «ХИМИЧЕСКУЮ АТАКУ»"] },
+  date: { day: "Ср, вечер", news: ["НЕВЕСТА СБЕЖАЛА К ОФИЦИАНТУ ПРЯМО ВО ВРЕМЯ УЖИНА", "В РЕСТОРАНЕ ПОТУХЛИ ВСЕ СВЕЧИ ОДНОВРЕМЕННО. ПОЛИЦИЯ ИЩЕТ ПРИЧИНУ"] },
+  cinema: { day: "Ср, ночь", news: ["ЗАЛ АПЛОДИРОВАЛ: «ЛУЧШАЯ СЦЕНА ФИЛЬМА БЫЛА НЕ НА ЭКРАНЕ»", "СЕАНС ПРЕРВАН: ЗРИТЕЛИ ПРИНЯЛИ ЗВУК ЗА ВЗРЫВ В ЗАЛЕ"] },
+  elevator: { day: "Чт, утро", news: ["ПОЖАРНЫЕ ОТКАЗАЛИСЬ ЗАХОДИТЬ В ЗАСТРЯВШИЙ ЛИФТ", "ЛИФТ ВЫБРОСИЛО НА 14 ЭТАЖ БЕЗ ЭЛЕКТРИЧЕСТВА"] },
+  library: { day: "Чт, вечер", news: ["БИБЛИОТЕКА ВНЕСЛА ЧИТАТЕЛЯ В ЧЁРНЫЙ СПИСОК ПОЖИЗНЕННО", "В БИБЛИОТЕКЕ С ПОЛОК ПОПАДАЛИ КНИГИ. СЕЙСМОЛОГИ В НЕДОУМЕНИИ"] },
+  exam: { day: "Пт, утро", news: ["СТУДЕНТА ОТЧИСЛИЛИ ЗА МОРАЛЬНЫЙ УЩЕРБ ОТЛИЧНИЦЕ", "ЭКЗАМЕН СОРВАН: «ЭТО БЫЛ НЕ ГРОМ», — ЗАЯВИЛ ПРЕПОДАВАТЕЛЬ"] },
+  funeral: { day: "Пт, день", news: ["ВДОВА: «ХУДШИЙ ДЕНЬ В МОЕЙ ЖИЗНИ, И ДЕЛО НЕ В МУЖЕ»", "НА ПОХОРОНАХ ПОКОЙНЫЙ ЯКОБЫ «ОТВЕТИЛ». СВЯЩЕННИК ВЗЯЛ ОТПУСК"] },
+  yoga: { day: "Сб, утро", news: ["ГУРУ ИЗГНАЛ УЧЕНИКА: «ЕГО КАРМА ПАХНЕТ»", "НА РЕТРИТЕ МОЛЧАНИЯ ВПЕРВЫЕ ЗА 10 ЛЕТ ПРОЗВУЧАЛ ЗВУК"] },
+  wedding: { day: "Сб, 12:00", news: ["СВАДЕБНОЕ ВИДЕО НАБРАЛО 4 МИЛЛИОНА ПРОСМОТРОВ. НЕВЕСТА УШЛА К ТАМАДЕ", "НА СВАДЬБЕ ВЗОРВАЛСЯ САЛЮТ. ГОСТИ УВЕРЕНЫ: НЕ ТОЛЬКО ОН"] }
+};
+LEVELS.forEach(L => Object.assign(L, STORY_META[L.id]));
+
 
 // ---- бесконечный режим «Смена в метро» ----
 // Давление растёт всё быстрее, на остановках пассажиры меняются. Результат — сколько секунд продержался.
@@ -859,7 +895,7 @@ function startLevel(i) {
     rumble: { next: rnd(4, 6), on: false, t: 0, amt: 0 }, heardT: 0, tut: i === 0 ? 0 : 9,
     trump: { ready: true, cd: 0 }, forecast: [],
     motes: Array.from({ length: 26 }, () => ({ x: rnd(140, 1250), y: rnd(120, 560), s: rnd(.5, 1.3) })),
-    stats: { farts: 0, heard: 0, framed: 0, framedBy: {}, blamed: 0, big: 0, vented: 0, burned: 0, maxSus: 0, trumpUsed: false },
+    stats: { farts: 0, heard: 0, framed: 0, framedBy: {}, blamed: 0, cleanPowers: [], vented: 0, burned: 0, maxSus: 0, trumpUsed: false },
     over: false, endT: 0, shake: 0, hbT: 0, flash: 0, lastFart: -9
   };
   buildBg(L); mode = "play"; hideAll();
@@ -954,7 +990,7 @@ function useTrump() {
 // Кандидаты: ты, все персонажи и предметы (гроб). Виноват тот, кто ближе к облаку.
 function blameTarget(n, cx) {
   const cands = [{ me: true, x: G.me.x, n: "ты" }];
-  for (const o of G.npcs) { if (o === n && Math.abs(o.x - cx) > 75) continue; cands.push({ o, x: o.x, n: o.n, self: o === n }); }
+  for (const o of G.npcs) { if (o === n && (n.sniffer || Math.abs(o.x - cx) > 75)) continue; cands.push({ o, x: o.x, n: o.n, self: o === n }); }
   for (const p of (G.L.props || [])) cands.push({ prop: p, x: p.x, n: p.n });
   cands.sort((a, b) => Math.abs(a.x - cx) - Math.abs(b.x - cx));
   return cands[0];
@@ -1010,7 +1046,7 @@ function update(dt) {
   G.floats.forEach(f => f.t += dt); G.floats = G.floats.filter(f => f.t < 1.8);
   G.npcs.forEach(n => { if (n.bubble) { n.bubble.t += dt; if (n.bubble.t > n.bubble.dur) n.bubble = null; } });
   G.shake = Math.max(0, G.shake - dt * 12); G.flash = Math.max(0, G.flash - dt * 2);
-  if (G.over) { G.endT -= dt; updateBed(0, 700); if (G.endT <= 0) showResult(); return; }
+  if (G.over) { G.endT -= dt; updateBed(0, 700); if (G.endT <= 0) { if (G.result.win) { G.endT = 99; storyAfter(G.L, showResult); } else showResult(); } return; }
 
   // события
   for (const e of G.evs) if (G.t >= e.next) {
@@ -1066,7 +1102,7 @@ function update(dt) {
       }
     }
   }
-  for (const s of G.sources) if (s.kind === "fart" && s.t >= s.dur && !s.wasHeard && s.power >= 80 && s.loud < 130) G.stats.big++;
+  for (const s of G.sources) if (s.kind === "fart" && s.t >= s.dur && !s.wasHeard && s.loud < 130) G.stats.cleanPowers.push(s.power);
   G.sources = G.sources.filter(s => s.t < s.dur);
   G.npcs.forEach(n => n.heardAcc = Math.max(0, n.heardAcc - dt * 0.6)); G.heardT = Math.max(0, G.heardT - dt);
 
@@ -1089,7 +1125,8 @@ function update(dt) {
     for (const v of fl.vents) if (Math.abs(c.x - v.x) < v.w) { k += v.k; c.x += (v.x - c.x) * Math.min(1, dt * 1.2); c.vented = true; }
     c.s *= Math.exp(-k * dt);
     if (c.x < xmin || c.x > xmax) { if (fl.open) { c.s = 0; c.vented = true; } else { c.x = clamp(c.x, xmin, xmax); c.pv *= -0.4; } }
-    if (L.candle && c.s > 7 && Math.abs(c.x - L.candle) < 42) {
+    c.candleT = L.candle && c.s > 7 && Math.abs(c.x - L.candle) < 42 ? (c.candleT || 0) + dt : 0;
+    if (c.candleT > 0.4) {
       addFx("ПЫХ!", L.candle, 380, 70, ORG); G.flash = .8; G.sources.push({ kind: "rumble", loud: 40, t: 0, dur: 0.5, reacted: new Set() }); if (canPlay()) noiseBurst(0, 0.5, "lowpass", 500, 0.8);
       if (!ws.length) { G.stats.burned++; addFloat("УЛИКИ СОЖЖЕНЫ", L.candle, 320, YEL, 26); } c.s = 0;
     }
@@ -1148,7 +1185,7 @@ function goalDone(g, st, won) {
     case "frameWho": return (st.framedBy[g.who] || 0) >= 1;
     case "vent": return st.vented >= g.n;
     case "burn": return st.burned >= g.n;
-    case "big": return st.big >= g.n;
+    case "big": return st.cleanPowers.filter(p => p >= g.p).length >= g.n;
     case "noHeard": return won && st.heard === 0;
     case "noBlame": return won && st.blamed === 0;
     case "noTrump": return won && !st.trumpUsed;
@@ -1170,7 +1207,7 @@ function goalFailed(g, st) {
 }
 function goalProgress(g, st) {
   if (g.k === "vent") return `${Math.min(st.vented, g.n)}/${g.n}`;
-  if (g.k === "big") return `${Math.min(st.big, g.n)}/${g.n}`;
+  if (g.k === "big") return `${Math.min(st.cleanPowers.filter(p => p >= g.p).length, g.n)}/${g.n}`;
   if (g.k === "farts") return `${st.farts}/${g.n}`;
   return "";
 }
@@ -1185,7 +1222,7 @@ function showResult() {
     $("rsStars").textContent = `${sec} с`;
     $("rsText").textContent = (r.why === "burst" ? "Тебя разорвало на перегоне. " : "Тебя вычислили. ") + (isRec ? "Это новый рекорд!" : `Рекорд: ${rec} с.`);
     $("rsStats").innerHTML = [["Продержался", sec + " с"], ["Рекорд", Math.max(sec, rec) + " с"], ["Залпов", G.stats.farts], ["Подставил других", G.stats.framed + " раз"]].map(([a, b]) => `<span>${a}</span><b>${b}</b>`).join("");
-    $("rsGoals").innerHTML = ""; $("bRsNext").style.display = "none"; show("ovResult"); return;
+    $("rsGoals").innerHTML = ""; $("bRsNext").style.display = "none"; $("rsPaper").style.display = "none"; show("ovResult"); return;
   }
   const goals = (L.goals || []).map(g => goalDone(g, G.stats, r.win));
   if (r.win) {
@@ -1196,6 +1233,8 @@ function showResult() {
   const prev = save.goals[L.id] || [];
   save.goals[L.id] = goals.map((d, i) => d || !!prev[i]); persist();
   $("rsStars").textContent = r.win ? "★".repeat(st) + "☆".repeat(3 - st) : "💀";
+  $("rsPaper").style.display = r.win ? "none" : "";
+  if (!r.win) $("rsHead").textContent = L.news ? L.news[r.why === "burst" ? 1 : 0] : "";
   $("rsText").textContent = r.win ? L.win + (levelIdx === LEVELS.length - 1 ? " Ты прошёл всю игру. Тебе больше нечего бояться. Кроме смерти. И шаурмы." : "")
     : r.why === "burst" ? "Звук был слышен в соседнем районе. Сейсмологи зафиксировали толчок в 3 балла. Штаны не выжили." : L.lose;
   $("rsGoals").innerHTML = (L.goals || []).map((g, i) => `<div class="${goals[i] ? "ok" : prev[i] ? "old" : "no"}">${goals[i] ? "✔" : prev[i] ? "✔" : "✘"} ${g.t}${!goals[i] && prev[i] ? " <i>(выполнено раньше)</i>" : ""}</div>`).join("");
@@ -1369,6 +1408,37 @@ const SCENES = {
   }
 };
 
+// ---- фоны только для катсцен ----
+Object.assign(SCENES, {
+  kiosk: {
+    bg() {
+      // вокзал вечером
+      ctx.fillStyle = "#2a1a55"; ctx.fillRect(0, 0, W, H); dots(0, 0, W, 600, "#3a2a70", 18, 3);
+      for (let i = 0; i < 4; i++) { wR(60 + i * 300, 90, 220, 140, { fill: "#1a0d33", lw: 6 }); wE(170 + i * 300, 150, 30, 30, { fill: YEL, lw: 4 }); }
+      sign(470, 60, 340, 52, "#fff", ["ВОКЗАЛ · ПРИБЫТИЕ · УБЫТИЕ"], 18);
+      ctx.fillStyle = "#555a66"; ctx.fillRect(0, 590, W, H - 590); hatch(0, 590, W, 130, "#00000044", 14, 3); wL(0, 590, W, 590, 7);
+      wE(1180, 300, 50, 50, { fill: "#fff", lw: 6 }); wL(1180, 300, 1180, 268, 5); wL(1180, 300, 1204, 300, 5); T("18:40", 1180, 372, 18, "#fff");
+      // ларёк
+      wR(620, 250, 380, 340, { fill: ORG, lw: 7 }); dots(626, 256, 368, 330, "#ffe53b55", 16, 4);
+      wR(600, 200, 420, 70, { fill: MAG, lw: 7 }); T("ШАУРМА ДЯДИ ТОЛИ", 810, 224, 26, "#fff"); T("по рецепту бабушки", 810, 252, 16, YEL, "center", "Neucha", 400);
+      wR(660, 300, 300, 170, { fill: "#1a0d33", lw: 6 });
+      // вертел с мясом
+      wL(900, 310, 900, 460, 6); shape([872, 330, 928, 330, 918, 450, 882, 450], { fill: "#a0521a", lw: 5 }); hatch(872, 330, 56, 120, "#00000055", 8, 3);
+    },
+    front() { wR(640, 470, 340, 40, { fill: "#fff", lw: 6 }); wR(650, 510, 320, 80, { fill: "#d0103a", lw: 6 }); T("ГАРАНТИЯ ДО СУББОТЫ", 810, 550, 18, "#fff"); }
+  },
+  bedroom: {
+    bg() {
+      ctx.fillStyle = "#1a1055"; ctx.fillRect(0, 0, W, H); dots(0, 0, W, H, "#2a2070", 20, 4);
+      frameBox(980, 100, 200, 220, "#0d0830"); wE(1080, 170, 34, 34, { fill: YEL, lw: 5 }); wL(1080, 100, 1080, 320, 6);
+      wR(350, 300, 580, 80, { fill: "#7a2cff", lw: 7 });           // изголовье
+      for (const x of [520, 760]) wE(x, 420, 95, 40, { fill: "#fff", lw: 6 }); // подушки
+      sign(80, 120, 260, 70, "#fff", ["Совет да любовь", "(и вентиляция)"], 18);
+    },
+    front() { shape([330, 505, 950, 505, 985, 700, 295, 700], { fill: MAG, lw: 7, smooth: false }); wL(330, 540, 960, 540, 5, "#ffffffaa"); dots(340, 510, 640, 180, "#ffe53b77", 18, 4); }
+  }
+});
+
 // ---------- render.js ----------
 // ================= РИСОВАНИЕ ИГРЫ =================
 function lookVec(n) {
@@ -1404,7 +1474,7 @@ function drawPlayer(t) {
   { const a = sus ? headPos(sus) : G.L.focus, b = headPos(me), dx = a.x - b.x, dy = a.y - b.y, m = Math.hypot(dx, dy) || 1; look = { x: dx / m, y: dy / m }; }
   SEED = 500;
   drawChar(me, { st: G.over && !G.result.win ? "shock" : "watch", expr, look, t, skin, tilt: (pose === "dog" ? 0.55 : pose === "child" ? 0.3 : 0) + (G.rumble.on ? Math.sin(t * 40) * 0.03 : 0), arm: G.fanDir < 0 ? "fanL" : G.fanDir > 0 ? "fanR" : G.rumble.on ? "belly" : "down", puff: charging && G.power > 40, bulge: p > 0.85 ? 1.25 : 1, worried: p > 0.6, vein: p > 0.8, sweat: p > 0.88 ? 4 : p > 0.75 ? 2 : p > 0.6 ? 1 : 0, blush: charging && G.power > 55 ? "#ff2d95aa" : null });
-  const h = headPos(me); if (G.t < 3) TO("▼ ТЫ", h.x, h.y - 100 + Math.sin(t * 6) * 5, 28, YEL);
+  const h = headPos(me); if (G.t < 3) TO("▼ " + playerName().toUpperCase(), h.x, h.y - 100 + Math.sin(t * 6) * 5, 28, YEL);
 }
 function drawGame(t) {
   const L = G.L, me = G.me;
@@ -1548,6 +1618,192 @@ function drawHUD(t) {
 }
 
 
+// ---------- story.js ----------
+// ================= СЮЖЕТ И КАТСЦЕНЫ =================
+// Катсцена — несколько кадров комикса. Кадр: фон (сцена уровня), персонажи, подпись, реплики, звукоподражания.
+// {name} в тексте заменяется на имя игрока. Пробел / клик — дальше, Esc — пропустить.
+
+function playerName() { return save.name || "Гена"; }
+function fmt(s) { return s.replace(/\{name\}/g, playerName()); }
+
+// персонажи, которых нет в уровнях
+const STORY_CAST = {
+  "Дядя Толя": CH("Дядя Толя", 0, { skin: "#f2a57e", head: { w: 54, h: 56, jaw: 1.15 }, eyes: { l: .9, r: .9, gap: .42 }, nose: { t: "potato", s: 1.7, col: "#e0245e" }, brow: "thick", hair: "bald3", must: true, chin2: true, stubble: true, body: { w: 92, h: 66, col: "#fff", pat: "stripes", col2: "#e0245e", pants: "#333", fat: .8 } }),
+  "Вдова (продавщица)": CH("Вдова", 0, { skin: "#f6d9c4", head: { w: 44, h: 54, jaw: .8 }, eyes: { l: 1, r: 1, gap: .42, bags: true }, nose: { t: "button", s: 1.2, col: "#e0245e" }, hair: "veil", lips: true, body: { w: 70, h: 62, col: "#fff", pat: "stripes", col2: "#e0245e", pants: "#111" } })
+};
+function castOf(name) {
+  if (STORY_CAST[name]) return STORY_CAST[name];
+  for (const L of LEVELS) for (const n of L.npcs) if (n.n === name) return n;
+  return null;
+}
+
+// --- сценарий ---
+// cast: [{ n: имя | "me", x, y?, pose?, st?, expr?, look? }], say: [{ n, t }], cap: подпись, fx: [{ t, x, y }], title: заставка
+const ME = (x, o = {}) => Object.assign({ n: "me", x }, o);
+const STORY = {
+  prologue: [
+    { bg: "kiosk", cap: "Понедельник, 18:40. Вокзал.", cast: [ME(470, { expr: "smile" }), { n: "Дядя Толя", x: 800, y: 470, expr: "smile" }], say: [{ n: "Дядя Толя", t: "Последняя шаурма, {name}. По рецепту бабушки." }, { n: "me", t: "А бабушка где?" }] },
+    { bg: "kiosk", cap: "", cast: [ME(470, { expr: "o" }), { n: "Дядя Толя", x: 800, y: 470, expr: "smile", st: "sleep" }], say: [{ n: "Дядя Толя", t: "Померла. От неё же. Ешь давай, остынет." }] },
+    { bg: "kiosk", cap: "Через минуту внутри что-то проснулось.", cast: [ME(470, { expr: "teeth", skin: "#b6ff3b", arm: "belly", sweat: 3, bulge: 1.25 }), { n: "Дядя Толя", x: 800, y: 470, expr: "smug" }], fx: [{ t: "БУРЛ!", x: 300, y: 560 }], say: [{ n: "Дядя Толя", t: "Гарантия — до субботы." }] },
+    { title: "НЕДЕЛЯ ДО СВАДЬБЫ", sub: "в главной роли: {name}" }
+  ],
+  before: {
+    home: [{ bg: "home", cap: "Понедельник, вечер. Дома.", cast: ["Батя", "Баба Зина", "Барсик", ME(640)], say: [{ n: "Батя", t: "Ну что, {name}! Последняя холостая неделя!" }, { n: "Баба Зина", t: "А чем это от тебя пахнет? Вокзалом?" }] }],
+    metro: [{ bg: "metro", cap: "Вторник, 8:10. На работу.", cast: ["Тётя Люда", ME(600), "Кеша", { n: "Дед Пихто", st: "sleep" }], say: [{ n: "Дед Пихто", t: "Хр-р... Толина шаурма... я тоже ел... в восемьдесят седьмом..." }] }],
+    office: [{ bg: "office", cap: "Вторник. Планёрка.", cast: ["Света", { n: "Шеф", x: 300 }, ME(620), "Виталик"], say: [{ n: "Шеф", t: "Коллеги! Сегодня кого-то сократят. Кто первым издаст звук — тот и пойдёт." }, { n: "Света", t: "Это он про принтер?" }] }],
+    date: [{ bg: "date", cap: "Среда. Последний ужин до свадьбы.", cast: [{ n: "Жорж", x: 300 }, ME(470), "Лена", "Старик"], say: [{ n: "Жорж", t: "Фасолевый суп для молодого человека. Как обычно." }, { n: "Лена", t: "{name}, обещай, что на свадьбе ты будешь... собой." }] }],
+    cinema: [{ bg: "cinema", cap: "Среда, 23:50. Не спится.", cast: ["Он", "Она", ME(620), "Критик Аристарх", "Вовочка"], say: [{ n: "Критик Аристарх", t: "Фильм о человеке, который носил в себе тайну. Три часа." }] }],
+    elevator: [{ bg: "elevator", cap: "Четверг. Едем в ЗАГС подавать документы.", cast: ["Толян", ME(620), "Бабуля Роза", "Жужа"], say: [{ n: "Бабуля Роза", t: "А я тебя знаю. Ты Толин клиент. У них у всех такое лицо." }] }],
+    library: [{ bg: "library", cap: "Четверг, вечер. Нужно лекарство.", cast: ["Ботаник", ME(600), { n: "Соня", st: "sleep" }, "Изольда Марковна"], say: [{ n: "Изольда Марковна", t: "Кишечные проклятия? Третий стеллаж. Говорите шёпотом. Или вообще ничем." }] }],
+    exam: [{ bg: "exam", cap: "Пятница, 9:00. Тёща сказала: без диплома дочь не отдаст.", cast: ["Зубрилина", ME(620), "Колян", { n: "Препод", x: 960 }], say: [{ n: "Препод", t: "{name}? Пересдача пятнадцатилетней давности? Садитесь. Тихо." }] }],
+    funeral: [{ bg: "funeral", cap: "Пятница. Дядя Толя умер. От своей шаурмы.", cast: [{ n: "Вдова", expr: "cry" }, ME(560), "Тётя Галя", "Батюшка"], say: [{ n: "Вдова", t: "Он так тебя любил, {name}. Ты был его последним клиентом." }] }],
+    yoga: [{ bg: "yoga", cap: "Суббота, 7:00. До свадьбы пять часов.", cast: ["Дама в лосинах", ME(580), "Веган Святослав", "Гуру Шанти"], say: [{ n: "Гуру Шанти", t: "Я очищу твою карму и кишечник за одно утро. Гарантия — кармическая." }] }],
+    wedding: [{ bg: "wedding", cap: "Суббота, 12:00. ЗАГС.", cast: ["Тёща Тамара", ME(580), "Невеста Лена", "Тамада Гоша", "Регистратор Нина Петровна"], say: [{ n: "Тёща Тамара", t: "Ну, {name}... Посмотрим, какой ты." }, { n: "Невеста Лена", t: "Ты сегодня такой красивый. И такой зелёный." }] }]
+  },
+  after: {
+    home: [{ bg: "home", cap: "Батя уснул под футбол. Барсик всё видел. Барсик никому не скажет. Наверное.", cast: [{ n: "Батя", st: "sleep" }, { n: "Баба Зина", st: "sleep" }, { n: "Барсик", st: "stare" }, ME(640, { expr: "relief" })] }],
+    metro: [{ bg: "metro", cap: "Твоя станция. Дед проснулся на конечной. Он едет туда с 1987 года.", cast: ["Тётя Люда", ME(600, { expr: "relief" }), "Кеша", { n: "Дед Пихто", st: "sleep" }] }],
+    office: [{ bg: "office", cap: "Вечер. Виталика сократили. Он так и не понял, за что.", cast: ["Света", { n: "Шеф", x: 470 }, ME(620, { expr: "o" }), { n: "Виталик", expr: "cry" }], say: [{ n: "Шеф", t: "{name}! Вы весь день сидели как камень. Повышаю!" }] }],
+    date: [{ bg: "date", cap: "Десерт.", cast: [ME(470, { expr: "teeth", sweat: 2 }), "Лена"], say: [{ n: "Лена", t: "Ты сегодня какой-то напряжённый." }, { n: "me", t: "Это от счастья." }] }],
+    cinema: [{ bg: "cinema", cap: "Титры. Критик плакал. {name} тоже. По разным причинам.", cast: ["Он", "Она", ME(620, { expr: "cry" }), { n: "Критик Аристарх", expr: "cry" }, { n: "Вовочка", st: "sleep" }] }],
+    elevator: [{ bg: "elevator", cap: "Лифт поехал. Документы сданы. Обратной дороги нет.", cast: [{ n: "Толян", st: "stare" }, ME(620), "Бабуля Роза", "Жужа"], say: [{ n: "Толян", t: "Брат... Что бы это ни было — я никому." }] }],
+    library: [{ bg: "library", cap: "«Кишечные проклятия Восточной Европы». Глава «Шаурма» вырвана. На полях подпись: «Т.»", cast: ["Ботаник", ME(600, { expr: "shock", st: "shock" }), { n: "Соня", st: "sleep" }, "Изольда Марковна"], fx: [{ t: "?!", x: 600, y: 300 }] }],
+    exam: [{ bg: "exam", cap: "Диплом получен. Теперь тёща не отвертится.", cast: ["Зубрилина", ME(620, { expr: "smile" }), { n: "Колян", st: "sleep" }, { n: "Препод", x: 960 }], say: [{ n: "Препод", t: "Тройка. И откройте окно, когда будете уходить." }] }],
+    funeral: [{ bg: "funeral", cap: "После церемонии.", cast: [{ n: "Вдова", x: 450 }, ME(560, { expr: "shock", st: "shock" }), "Тётя Галя", "Батюшка"], say: [{ n: "Вдова", t: "Проклятие снимается только на свадьбе. Если продержишься до конца." }, { n: "me", t: "Свадьба завтра." }] }],
+    yoga: [{ bg: "yoga", cap: "До свадьбы два часа.", cast: ["Дама в лосинах", ME(580, { expr: "frown" }), "Веган Святослав", "Гуру Шанти"], say: [{ n: "Гуру Шанти", t: "Карма чиста. Про кишечник ничего не обещаю." }] }],
+    wedding: [
+      { bg: "wedding", cap: "Объявляю вас мужем и женой!", cast: ["Тёща Тамара", ME(580, { expr: "relief" }), { n: "Невеста Лена", expr: "smile" }, "Регистратор Нина Петровна", { n: "Тамада Гоша", st: "sleep" }], fx: [{ t: "ГОРЬКО!", x: 760, y: 170 }] },
+      { bg: "bedroom", cap: "Ночь после свадьбы. Тишина. {name} наконец расслабился.", cast: [ME(520, { y: 560, expr: "smile", st: "sleep" }), { n: "Лена", x: 760, y: 560, st: "sleep", expr: "smile" }] },
+      { bg: "bedroom", cap: "", cast: [ME(520, { y: 560, expr: "shock", st: "shock" }), { n: "Лена", x: 760, y: 560, st: "sleep", expr: "relief" }], fx: [{ t: "БРРРАП!", x: 860, y: 600 }] },
+      { bg: "bedroom", cap: "", cast: [ME(520, { y: 560, expr: "o" }), { n: "Лена", x: 760, y: 560, expr: "smile" }], say: [{ n: "Лена", t: "Фух. Я тоже ела у дяди Толи. С прошлого вторника держусь." }] },
+      { bg: "kiosk", cap: "Год спустя. Вокзал.", cast: [ME(470, { expr: "o" }), { n: "Вдова (продавщица)", x: 800, y: 470, expr: "smile" }], say: [{ n: "Вдова (продавщица)", t: "Шаурма дяди Толи! По рецепту бабушки! Последняя!" }] },
+      { title: "КОНЕЦ?", sub: "спасибо, что продержался, {name}" }
+    ]
+  },
+  endless: [{ bg: "metro", cap: "Год спустя. Кольцевая линия. Шаурма снова в деле. Ты едешь, пока тебя не раскроют.", cast: ["Тётя Люда", ME(600, { expr: "teeth" }), "Кеша", { n: "Дед Пихто", st: "sleep" }], say: [{ n: "Дед Пихто", t: "Опять ты... Тоже на Толиной?" }] }]
+};
+
+// --- проигрывание ---
+let CS = null;
+function storySeen(key) { return !!(save.seen && save.seen[key]); }
+function markSeen(key) { save.seen = save.seen || {}; save.seen[key] = true; persist(); }
+// показать катсцену; если её уже видели и force не задан — сразу onDone
+function playStory(key, pages, onDone, force) {
+  if (!pages || !pages.length || (!force && storySeen(key))) { onDone(); return; }
+  markSeen(key);
+  CS = { key, pages, i: 0, t: 0, onDone, prevMode: mode, bg: null };
+  csPrepare(); mode = "cutscene"; hideAll();
+}
+function csPrepare() {
+  const pg = CS.pages[CS.i]; CS.t = 0; CS.bg = null;
+  if (pg.bg) { const c = document.createElement("canvas"); c.width = W; c.height = H; const real = ctx, g = G; G = null; ctx = c.getContext("2d"); SEED = 1; SCENES[pg.bg].bg(); ctx = real; G = g; CS.bg = c; }
+}
+function csNext() {
+  if (!CS) return;
+  const pg = CS.pages[CS.i], need = 0.35 + (pg.say ? pg.say.length * 0.45 : 0);
+  if (CS.t < need) { CS.t = need + 5; return; } // сначала показать кадр целиком
+  CS.i++; if (CS.i >= CS.pages.length) csEnd(); else { csPrepare(); blip(500); }
+}
+function csEnd() { const done = CS.onDone; CS = null; done(); }
+function csSkip() { if (CS) csEnd(); }
+
+function castObj(entry, scene) {
+  const e = typeof entry === "string" ? { n: entry } : entry;
+  let base;
+  if (e.n === "me") { base = P_YOU(); base.pose = scene === "elevator" || scene === "wedding" || scene === "kiosk" ? "stand" : scene === "yoga" ? "lotus" : "sit"; base.y = base.pose === "stand" ? 470 : base.pose === "lotus" ? 540 : 505; }
+  else base = castOf(e.n);
+  if (!base) return null;
+  const c = Object.assign({}, base);
+  if (e.x !== undefined) c.x = e.x; if (e.y !== undefined) c.y = e.y; if (e.pose) c.pose = e.pose;
+  if (scene === "bedroom" || scene === "kiosk") { c.walk = null; }
+  if (c.kind === "human" && (scene === "kiosk") && e.n !== "me") c.pose = "stand";
+  return { c, e };
+}
+function drawCutscene(t) {
+  const pg = CS.pages[CS.i]; CS.t += 1 / 60;
+  const g = G; G = null;
+  ctx.fillStyle = INK; ctx.fillRect(0, 0, W, H);
+  if (pg.title) {
+    SEED = 3; ctx.fillStyle = MAG; ctx.fillRect(0, 0, W, H); dots(0, 0, W, H, "#ff6fb8", 22, 6);
+    const k = clamp(CS.t * 3, 0, 1);
+    ctx.save(); ctx.translate(640, 320); ctx.scale(0.6 + k * 0.4, 0.6 + k * 0.4); ctx.rotate(-0.04);
+    TO(pg.title, 0, 0, 96, LIME, "center", 14, "Rubik Dirt"); ctx.restore();
+    if (pg.sub) TO(fmt(pg.sub), 640, 430, 30, YEL, "center", 6);
+  } else {
+    // кадр комикса: сцена чуть уменьшена внутри рамки
+    const fx0 = 26, fy0 = 22, fw = W - 52, fh = H - 44, sc = fw / W;
+    ctx.save(); ctx.beginPath(); ctx.rect(fx0, fy0, fw, fh); ctx.clip();
+    ctx.translate(fx0, fy0 + (fh - H * sc) / 2); ctx.scale(sc, sc);
+    const zoom = 1 + Math.min(CS.t, 6) * 0.006; ctx.translate(640 * (1 - zoom), 360 * (1 - zoom)); ctx.scale(zoom, zoom);
+    if (CS.bg) ctx.drawImage(CS.bg, 0, 0);
+    SEED = 100; if (SCENES[pg.bg] && SCENES[pg.bg].fx) SCENES[pg.bg].fx(t);
+    const items = (pg.cast || []).map(e => castObj(e, pg.bg)).filter(Boolean);
+    items.sort((a, b) => (a.c.pose === "stand" ? 1 : 0) - (b.c.pose === "stand" ? 1 : 0));
+    const meItem = items.find(i => i.e.n === "me");
+    items.forEach((it, idx) => {
+      const { c, e } = it; SEED = 2000 + idx * 300;
+      const st = e.st || "watch";
+      let look = e.look; if (!look) { const tgt = meItem && it !== meItem ? meItem : items.find(o => o !== it && o.c.kind === "human"); look = tgt ? { x: Math.sign(tgt.c.x - c.x) * 0.8, y: 0.1 } : { x: 0, y: 0 }; }
+      drawChar(c, { st, expr: e.expr || EXPR[st] || "flat", look, t, skin: e.skin, arm: e.arm, sweat: e.sweat, bulge: e.bulge, puff: e.puff });
+    });
+    SEED = 4000; if (SCENES[pg.bg] && SCENES[pg.bg].front) SCENES[pg.bg].front(t);
+    // звукоподражания
+    for (const f of (pg.fx || [])) { const k = clamp(CS.t * 4, 0, 1); ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(-0.12); ctx.scale(0.5 + k * 0.6, 0.5 + k * 0.6); const w = f.t.length * 34 + 60, pts = []; for (let i = 0; i < 28; i++) { const a = i / 28 * 6.283, r = i % 2 ? 1 : 0.72; pts.push(Math.cos(a) * w * r, Math.sin(a) * 70 * r); } SEED = 77; shape(pts, { fill: YEL, lw: 6, smooth: false }); TO(f.t, 0, 0, 64, MAG, "center", 9, "Rubik Dirt"); ctx.restore(); }
+    // реплики появляются по очереди
+    (pg.say || []).forEach((s, i) => {
+      if (CS.t < 0.35 + i * 0.45) return;
+      const it = items.find(o => (s.n === "me" ? o.e.n === "me" : o.e.n === s.n)); if (!it) return;
+      SEED = 6000 + i * 50; drawStoryBubble(it.c, fmt(s.t), clamp((CS.t - 0.35 - i * 0.45) * 6, 0, 1), i);
+    });
+    ctx.restore();
+    SEED = 9; wR(fx0, fy0, fw, fh, { lw: 9, j: 1 });
+    if (pg.cap) { const cap = fmt(pg.cap), lines = wrap(cap, 900, 26, "Rubik"); ctx.font = "800 26px Rubik"; const w = Math.max(...lines.map(l => ctx.measureText(l).width)) + 40, h = lines.length * 32 + 20; panel(fx0 + 6, fy0 + 6, w, h, YEL); lines.forEach((l, i) => T(l, fx0 + 26, fy0 + 32 + i * 32, 26, INK, "left", "Rubik", 800)); }
+  }
+  // низ: номер кадра и подсказка
+  T(`${CS.i + 1}/${CS.pages.length}`, 60, H - 34 + 22, 16, "#fff");
+  T(TOUCH ? "нажми, чтобы продолжить" : "ПРОБЕЛ — дальше · Esc — пропустить", 640, H - 12, 15, "#fff", "center", "Rubik", 700);
+  panel(W - 190, H - 30, 170, 26, "#ffffff22"); T("пропустить ⏭", W - 105, H - 17, 15, "#fff");
+  ctx.globalAlpha = 0.35; ctx.drawImage(grain, 0, 0, W, H); ctx.globalAlpha = 1;
+  G = g;
+}
+function drawStoryBubble(c, text, a, i) {
+  const hp = headPos(c), lines = wrap(text, 360, 28);
+  ctx.save(); ctx.globalAlpha = a; ctx.font = "400 28px Neucha, Rubik";
+  const w = Math.max(...lines.map(l => ctx.measureText(l).width)) + 40, h = lines.length * 31 + 24;
+  const x = clamp(hp.x - w / 2, 40, W - w - 40), y = Math.max(110 + i * 8, hp.y - (c.kind === "human" ? c.head.h * c.sc : 40) - h - 46 - i * 6);
+  shape([hp.x - 14, y + h - 4, hp.x + 16, y + h - 4, hp.x + 4, y + h + 30], { fill: "#fff", lw: 4.5, smooth: false });
+  shape([x, y + 8, x + w * .5, y - 4, x + w, y + 6, x + w + 6, y + h * .5, x + w - 2, y + h, x + w * .5, y + h + 4, x + 2, y + h - 3, x - 6, y + h * .5], { fill: "#fff", lw: 5 });
+  lines.forEach((l, k) => T(l, x + w / 2, y + 28 + k * 31, 28, INK, "center", "Neucha", 400));
+  ctx.restore();
+}
+// клик по холсту: дальше или «пропустить»
+cv.addEventListener("pointerdown", e => {
+  if (mode !== "cutscene") return;
+  const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  initAudio();
+  if (x > W - 200 && y > H - 40) csSkip(); else csNext();
+});
+
+// --- места, где катсцены вызываются ---
+// перед уровнем: пролог (только перед первым), сцена «до»
+function storyBefore(i, then) {
+  if (i < 0) return playStory("endless", STORY.endless, then);
+  const L = LEVELS[i];
+  const go = () => playStory("before_" + L.id, STORY.before[L.id], then);
+  if (i === 0) playStory("prologue", STORY.prologue, go); else go();
+}
+// после победы: сцена «после»
+function storyAfter(L, then) { if (L.endless) return then(); playStory("after_" + L.id, STORY.after[L.id], then); }
+// список всех увиденных сцен для пересмотра из меню
+function storyAll() {
+  const out = [];
+  const add = (key, pages) => { if (storySeen(key)) out.push(...pages); };
+  add("prologue", STORY.prologue);
+  for (const L of LEVELS) { add("before_" + L.id, STORY.before[L.id] || []); add("after_" + L.id, STORY.after[L.id] || []); }
+  add("endless", STORY.endless);
+  return out;
+}
+
 // ---------- touch.js ----------
 // ================= СЕНСОРНОЕ УПРАВЛЕНИЕ =================
 // На телефоне и планшете поверх игры появляются кнопки: «ЗАЖМИ» (как пробел), ← → (гнать облако), ★ (козырь), II (пауза).
@@ -1581,13 +1837,14 @@ function buildLevels() {
   LEVELS.forEach((L, i) => {
     const locked = i + 1 > save.unlocked, st = save.stars[L.id] || 0, d = document.createElement("div"); d.className = "lv" + (locked ? " locked" : "");
     const gd = (save.goals[L.id] || []).filter(Boolean).length;
-    d.innerHTML = `<div class="num">${i + 1}</div><div class="em">${locked ? "🔒" : L.em}</div><div class="nm">${L.name}</div><div class="sk">${"💀".repeat(L.skulls)}</div><div class="st">${"★".repeat(st)}${"☆".repeat(3 - st)}</div><div class="gl">🎯 ${gd}/${(L.goals || []).length}</div>`;
-    if (!locked) d.onclick = () => { initAudio(); openIntro(i); }; g.appendChild(d);
+    d.innerHTML = `<div class="num">${i + 1}</div><div class="day">${L.day || ""}</div><div class="em">${locked ? "🔒" : L.em}</div><div class="nm">${L.name}</div><div class="sk">${"💀".repeat(L.skulls)}</div><div class="st">${"★".repeat(st)}${"☆".repeat(3 - st)}</div><div class="gl">🎯 ${gd}/${(L.goals || []).length}</div>`;
+    if (!locked) d.onclick = () => { initAudio(); storyBefore(i, () => openIntro(i)); }; g.appendChild(d);
   });
   const e = $("bEndless"), open = save.unlocked >= 3;
   e.className = "endless" + (open ? "" : " locked");
   e.innerHTML = open ? `♾️ СМЕНА В МЕТРО <small>бесконечный режим · рекорд ${save.endless || 0} с</small>` : `🔒 СМЕНА В МЕТРО <small>откроется после «Опенспейса»</small>`;
-  e.onclick = open ? () => { initAudio(); openIntro(-1); } : null;
+  e.onclick = open ? () => { initAudio(); storyBefore(-1, () => openIntro(-1)); } : null;
+  $("bStory").style.display = storyAll().length ? "" : "none";
 }
 function openIntro(i) {
   levelIdx = i; const L = i < 0 ? ENDLESS : LEVELS[i];
@@ -1599,7 +1856,18 @@ function openIntro(i) {
   $("inGoals").innerHTML = "<b>ДОП. ЦЕЛИ (по желанию)</b>" + (L.goals || []).map((g, k) => `<div class="${done[k] ? "ok" : ""}">${done[k] ? "✔" : "•"} ${g.t}</div>`).join("");
   mode = "intro"; G = null; show("ovIntro");
 }
-$("bPlay").onclick = () => { initAudio(); buildLevels(); show("ovLevels"); mode = "levels"; };
+function toLevels() { buildLevels(); show("ovLevels"); mode = "levels"; }
+function askName(then) { $("nameIn").value = save.name || ""; mode = "name"; show("ovName"); setTimeout(() => $("nameIn").focus(), 50); askName.then = then; }
+function nameDone() {
+  const v = $("nameIn").value.replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 16);
+  save.name = v || "Гена"; persist(); (askName.then || (() => show("ovMenu")))();
+}
+$("bNameOk").onclick = nameDone;
+$("nameIn").addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Enter") nameDone(); });
+$("bName").onclick = () => askName(() => { mode = "menu"; show("ovMenu"); });
+$("bPlay").onclick = () => { initAudio(); if (!save.name) askName(toLevels); else toLevels(); };
+$("bStory").onclick = () => playStory("all", storyAll(), toLevels, true);
+$("bInScene").onclick = () => { const i = levelIdx, L = i < 0 ? ENDLESS : LEVELS[i]; playStory("x", i < 0 ? STORY.endless : STORY.before[L.id], () => openIntro(i), true); };
 $("bHow").onclick = () => show("ovHow"); $("bHowBack").onclick = () => show("ovMenu");
 $("bCred").onclick = () => { $("credList").innerHTML = CREDITS.length ? CREDITS.map(c => `<div>🔊 <b>${c.title}</b> — ${c.author}, ${c.license}<br><span style="opacity:.7">${c.url}</span></div>`).join("") : "<div>Все звуки синтезированы.</div>"; show("ovCred"); };
 $("bCredBack").onclick = () => show("ovMenu");
@@ -1621,6 +1889,8 @@ function releaseFire() { if (mode === "play" && G && !G.over && G.charging) rele
 addEventListener("keydown", e => {
   if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault();
   if (e.repeat) return; keys[e.code] = true;
+  if (mode === "cutscene") { if (e.code === "Space" || e.code === "Enter" || e.code === "ArrowRight") csNext(); if (e.code === "Escape") csSkip(); return; }
+  if (mode === "name") return;
   if (e.code === "KeyM") muted = !muted;
   if (mode === "intro" && e.code === "Enter") { initAudio(); startLevel(levelIdx); return; }
   if (mode === "pause" && e.code === "Escape") { hideAll(); mode = "play"; return; }
@@ -1653,7 +1923,7 @@ function frame(ts) {
   const t = ts / 1000, dt = Math.min(0.05, t - lastT || 0.016); lastT = t;
   update(dt); BOIL = 1; SEED = 1;
   ctx.clearRect(0, 0, W, H);
-  if ((mode === "play" || mode === "pause" || mode === "result") && G) drawGame(t); else drawMenuBg(t);
+  if (mode === "cutscene" && CS) drawCutscene(t); else if ((mode === "play" || mode === "pause" || mode === "result") && G) drawGame(t); else drawMenuBg(t);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
