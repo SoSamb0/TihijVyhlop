@@ -1,0 +1,14 @@
+{
+  "name": "tihij-vyhlop",
+  "private": true,
+  "description": "Тихий выхлоп — браузерная игра про то, как незаметно пукнуть",
+  "type": "module",
+  "scripts": {
+    "build": "python src/build.py",
+    "balance": "node tools/balance.mjs",
+    "screenshot": "node tools/screenshot.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.49.1"
+  }
+}

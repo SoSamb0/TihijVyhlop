@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#17081f">
+<title>Тихий выхлоп</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;800;900&family=Rubik+Dirt&family=Neucha&display=swap" rel="stylesheet">
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <canvas id="c" width="1280" height="720"></canvas>
+  <div id="touch">
+    <div class="tb" id="tL">←</div><div class="tb" id="tR">→</div>
+    <div class="tb" id="tTrump">★</div><div class="tb" id="tFire">ЗАЖМИ<br>и отпусти</div>
+    <div class="tb" id="tPause">II</div>
+  </div>
+
+  <div class="ov show" id="ovMenu"><div class="card">
+    <h1>ТИХИЙ<br>ВЫХЛОП</h1>
+    <div class="sub">СИМУЛЯТОР СОЦИАЛЬНОГО ВЫЖИВАНИЯ</div>
+    <p class="dark">«Ничто не вечно. Особенно терпение кишечника.»</p>
+    <div>
+      <button class="btn pink" id="bPlay">ИГРАТЬ</button>
+      <button class="btn" id="bHow">КАК ИГРАТЬ</button>
+      <button class="btn" id="bCred">ЗВУКИ И АВТОРЫ</button>
+    </div>
+    <button class="btn small" id="bReset">сбросить прогресс</button>
+  </div></div>
+
+  <div class="ov" id="ovLevels"><div class="card" style="max-width:1020px">
+    <h2>ВЫБЕРИ МЕСТО ПОЗОРА</h2>
+    <div class="grid" id="lvGrid"></div>
+    <div class="endless" id="bEndless"></div>
+    <button class="btn" id="bLvBack">← НАЗАД</button>
+  </div></div>
+
+  <div class="ov" id="ovHow"><div class="card">
+    <h2>КАК НЕ ОПОЗОРИТЬСЯ</h2>
+    <p>Давление в пузе растёт само. Дойдёт до 100 — лопнешь. Сбрасывай его так, чтобы никто не заметил, и продержись <b>60 секунд</b>.</p>
+    <div class="tips">
+      <div><kbd>ПРОБЕЛ</kbd> — зажми и отпусти. Чем дольше держишь, тем больше давления уйдёт, но тем громче.</div>
+      <div>🔊 Внизу шкала шума. Пока твоя метка в <b>синей зоне</b>, тебя не слышно. Жди громких моментов и стреляй под них.</div>
+      <div><kbd>←</kbd> <kbd>→</kbd> — гони облако от себя. Пунктир показывает, куда его несёт, а табличка над головой — кто учует и на кого подумает.</div>
+      <div><kbd>E</kbd> — козырь: один раз за уровень сам создаёшь громкий момент. Кто в этот миг смотрит на тебя, всё поймёт.</div>
+      <div>👀 смотрит на тебя · 📱 💤 занят и почти не слышит. Кольцо вокруг значка — сколько ещё так будет. <b style="color:#c90">!</b> — сейчас повернётся к тебе.</div>
+      <div>🎯 У каждого уровня есть доп. цели. Они по желанию и на звёзды не влияют.</div>
+    </div>
+    <button class="btn" id="bHowBack">ПОНЯЛ, ПОТЕРПЛЮ</button>
+  </div></div>
+
+  <div class="ov" id="ovCred"><div class="card">
+    <h2>ЗВУКИ И АВТОРЫ</h2>
+    <p>Записи с Wikimedia Commons (обрезаны, нормализованы, изменены по высоте и скорости). Остальные звуки синтезируются в игре.</p>
+    <div class="credits" id="credList"></div>
+    <button class="btn" id="bCredBack">← НАЗАД</button>
+  </div></div>
+
+  <div class="ov" id="ovIntro"><div class="card" style="max-width:960px">
+    <h2 id="inName"></h2>
+    <div id="inSkulls" style="font-size:20px"></div>
+    <p class="dark" id="inText"></p>
+    <div class="rule" id="inRule"></div>
+    <div class="tips" id="inTips"></div>
+    <div class="goals" id="inGoals"></div>
+    <button class="btn pink" id="bStart">НАЧАТЬ (Enter)</button>
+    <button class="btn" id="bInBack">← К УРОВНЯМ</button>
+  </div></div>
+
+  <div class="ov" id="ovPause"><div class="card">
+    <h2>ПАУЗА</h2>
+    <p class="dark">Кишечник на паузу не ставится. Но для тебя — исключение.</p>
+    <button class="btn pink" id="bResume">ПРОДОЛЖИТЬ</button>
+    <button class="btn" id="bRestart">ЗАНОВО</button>
+    <button class="btn" id="bPMenu">К УРОВНЯМ</button>
+  </div></div>
+
+  <div class="ov" id="ovResult"><div class="card">
+    <h2 id="rsTitle"></h2>
+    <div class="stars" id="rsStars"></div>
+    <p class="dark" id="rsText"></p>
+    <div class="goals" id="rsGoals"></div>
+    <div class="stats" id="rsStats"></div>
+    <div>
+      <button class="btn" id="bRsRetry">ЕЩЁ РАЗ</button>
+      <button class="btn pink" id="bRsNext">ДАЛЬШЕ →</button>
+      <button class="btn" id="bRsMenu">К УРОВНЯМ</button>
+    </div>
+  </div></div>
+</div>
+
+<script>
+const SOUND_DATA = /*__SOUNDS__*/null;
+const CREDITS = /*__CREDITS__*/[];
+/*__JS__*/
+</script>
+</div>
+<div id="rotate">📱↻<br>Поверни телефон горизонтально</div>
+</body>
+</html>
